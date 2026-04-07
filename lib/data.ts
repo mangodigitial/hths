@@ -1,27 +1,43 @@
-import { readFileSync, writeFileSync, existsSync, copyFileSync, mkdirSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import { join } from "path";
 
-// On Vercel, the project directory is read-only. We copy seed data to /tmp on
-// first access and read/write from there. Locally, we use the project's data/ dir.
-const SOURCE_DIR = join(process.cwd(), "data");
+// Resolve data directory - try multiple locations since Vercel bundles differently
+function resolveSourceDir(): string {
+  const candidates = [
+    join(process.cwd(), "data"),
+    join(__dirname, "..", "data"),
+    join(__dirname, "..", "..", "data"),
+  ];
+  for (const dir of candidates) {
+    if (existsSync(join(dir, "products.json"))) return dir;
+  }
+  return join(process.cwd(), "data");
+}
+
 const isVercel = !!process.env.VERCEL;
-const DATA_DIR = isVercel ? "/tmp/data" : SOURCE_DIR;
+const DATA_DIR = isVercel ? "/tmp/data" : resolveSourceDir();
+
+// Inline seed data so it's always available even if files aren't bundled
+const SEED_PRODUCTS = require("../data/products.json");
+const SEED_ORDERS: unknown[] = [];
 
 function ensureDir() {
-  if (isVercel && !existsSync(DATA_DIR)) {
+  if (!existsSync(DATA_DIR)) {
     mkdirSync(DATA_DIR, { recursive: true });
-    // Seed from bundled data
-    for (const file of ["products.json", "orders.json"]) {
-      const src = join(SOURCE_DIR, file);
-      if (existsSync(src)) copyFileSync(src, join(DATA_DIR, file));
-    }
+  }
+  const prodPath = join(DATA_DIR, "products.json");
+  if (!existsSync(prodPath)) {
+    writeFileSync(prodPath, JSON.stringify(SEED_PRODUCTS, null, 2));
+  }
+  const ordersPath = join(DATA_DIR, "orders.json");
+  if (!existsSync(ordersPath)) {
+    writeFileSync(ordersPath, JSON.stringify(SEED_ORDERS, null, 2));
   }
 }
 
 function readJSON(file: string) {
   ensureDir();
   const path = join(DATA_DIR, file);
-  if (!existsSync(path)) return file === "orders.json" ? [] : {};
   return JSON.parse(readFileSync(path, "utf-8"));
 }
 
