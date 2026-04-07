@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+.env
+.env.local
+Home.html
+Home_files/
+Order – Help the High Street.html
+Order – Help the High Street_files/
+/images/

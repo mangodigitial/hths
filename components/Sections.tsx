@@ -1,0 +1,149 @@
+"use client";
+import { useRef } from "react";
+import Link from "next/link";
+import { siteMeta, merchandiseItems, socialPlatforms, partnerShops } from "@/config/siteConfig";
+
+export function WelcomeSection() {
+  return (
+    <section id="welcome" className="hero">
+      <div className="hero-text"><h1>Welcome<br />to Help the<br />High Street</h1></div>
+      <div className="hero-image"><img src={siteMeta.heroImage} alt="Help the High Street" /></div>
+    </section>
+  );
+}
+
+export function BlueBanner() {
+  return (
+    <div className="blue-banner">
+      <h2>A helping hand in<br />challenging times</h2>
+      <p>The campaign sets out to support you and ensure your customers always shop with you.</p>
+      <div className="chevron-down">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><polyline points="6,12 16,22 26,12" stroke="white" strokeWidth="2" fill="none" /></svg>
+      </div>
+    </div>
+  );
+}
+
+export function AboutSection() {
+  return (
+    <section id="about" className="section">
+      <div className="section-inner">
+        <h2 className="section-title">Order your<br />customer pack</h2>
+        <div style={{ height: 24 }} />
+        <div className="pack-image"><img src={siteMeta.marketingPackImage} alt="Marketing Pack" /></div>
+        <p className="pack-text">The Help the High Street marketing pack provides ideas and support to help ensure your customers understand why it is important to always shop on the high street and always shop with you.</p>
+        <div className="pack-features">
+          <div className="pack-feature"><strong>Social Media</strong><p>How to guides on using Mailchimp, Facebook and Instagram. We appreciate some businesses do already use these platforms, but if you do not, these are worth considering.</p></div>
+          <div className="pack-feature"><strong>Sign Up Postcards</strong><p>Build your email list using our sign up postcards! We supply you with a set, each individually numbered with a Caribbean holiday prize draw.</p></div>
+          <div className="pack-feature"><strong>Website Service</strong><p>We can offer you a website from which to promote your business and sell online quickly through us.</p></div>
+          <div className="pack-feature"><strong>Reusable Containers</strong><p>Sets of reusable containers to give to your customers. Perfect for containing purchases, customers can bring them back each time.</p></div>
+          <div className="pack-feature"><strong>In-Store Merchandise</strong><p>We have a selection of items you can purchase from us to use in your shop and to give away to your customers.</p></div>
+          <div className="pack-feature"><strong>Window Stickers</strong><p>Our window stickers keep the message alive, so why not order one from us to pop in your shop window?</p></div>
+        </div>
+        <div style={{ textAlign: "center" }}><Link href="/customer-pack" className="btn">Get Yours</Link></div>
+      </div>
+    </section>
+  );
+}
+
+export function SocialSection() {
+  return (
+    <section id="social" className="section social-section">
+      <div className="section-inner">
+        <h2 className="section-title">Let us help you get social</h2>
+        <div style={{ height: 28 }} />
+        <div className="social-grid">
+          {socialPlatforms.map((p) => (
+            <div key={p.id} className="social-item">
+              <div className="social-icon"><img src={p.icon} alt={p.title} /></div>
+              <h4>{p.title}</h4>
+              <p>{p.description}</p>
+            </div>
+          ))}
+        </div>
+        <div style={{ textAlign: "center", marginTop: 8 }}><Link href="/more-info" className="btn">More Info</Link></div>
+      </div>
+    </section>
+  );
+}
+
+export function MerchandiseSection() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const scroll = (d: number) => { trackRef.current?.scrollBy({ left: d * 200, behavior: "smooth" }); };
+  return (
+    <section id="merchandise" className="section">
+      <div className="section-inner">
+        <h2 className="section-title">Merchandise</h2>
+        <p className="section-subtitle">Our range of in-store merchandise is perfect to give to your customers, so they know why it&apos;s important to shop with you!</p>
+        <div className="merch-carousel">
+          <button className="carousel-btn carousel-prev" onClick={() => scroll(-1)}>&#8249;</button>
+          <div className="merch-track" ref={trackRef}>
+            {merchandiseItems.map((item) => (
+              <div key={item.id} className="merch-card">
+                <div className="merch-card-label">{item.title}</div>
+                <img src={item.image} alt={item.title} />
+              </div>
+            ))}
+          </div>
+          <button className="carousel-btn carousel-next" onClick={() => scroll(1)}>&#8250;</button>
+        </div>
+        <div style={{ textAlign: "center" }}><Link href="/order" className="btn">Order Now</Link></div>
+      </div>
+    </section>
+  );
+}
+
+export function WebSection() {
+  return (
+    <section id="web" className="section section-alt">
+      <div className="section-inner">
+        <h2 className="section-title">Your own online shop</h2>
+        <div style={{ height: 24 }} />
+        <div className="shop-grid">
+          <div className="shop-text">
+            <p>Let your customers order via your own online shop.</p>
+            <p>Customers can choose exact weight or quantities of their products.</p>
+            <p>When they checkout you can offer them a choice of preferred collection date and time or even delivery if you wish.</p>
+            <div style={{ marginTop: 8 }}><Link href="/more-info" className="btn">More Info</Link></div>
+          </div>
+          <div className="shop-image"><img src={siteMeta.laptopImage} alt="Online Shop Preview" /></div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function ContactSection() {
+  return (
+    <section id="contact" className="section contact-section">
+      <div className="section-inner">
+        <h2 className="section-title">I&apos;d like some help!</h2>
+        <p className="section-subtitle">Send us your contact details and we&apos;ll get to work on helping you and your business straight away.</p>
+        <div className="contact-form-row">
+          <input type="text" placeholder="Company name" />
+          <input type="text" placeholder="Contact name" />
+          <input type="tel" placeholder="Tel" />
+        </div>
+        <div style={{ textAlign: "center" }}><button className="btn btn-white">Submit</button></div>
+      </div>
+    </section>
+  );
+}
+
+export function ShopGallery() {
+  return (
+    <div className="shop-photos">
+      {partnerShops.map((s) => <img key={s.name} src={s.image} alt={s.name} />)}
+    </div>
+  );
+}
+
+export function Footer() {
+  return (
+    <footer className="footer">
+      <div className="footer-logo"><img src={siteMeta.logoWhite} alt={siteMeta.title} /></div>
+      <h3>Contact Us</h3>
+      <p><a href={`mailto:${siteMeta.contactEmail}`}>{siteMeta.contactEmail}</a></p>
+    </footer>
+  );
+}
